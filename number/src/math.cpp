@@ -31,6 +31,7 @@ Number Number::add_unsigned(const Number& left, const Number& right) {
         result.radix_left[idx] = sum;
         carry_bit = carry_out;
     }
+    if (carry_bit) result.radix_left.push_back(1);
     return result;
 }
 
@@ -63,7 +64,11 @@ Number Number::operator+(Number other) const {
     constexpr char THIS_POSITIVE = 0b10;
     constexpr char OTHER_POSITIVE = 0b01;
     bool has_extraneous_bit = true; // in the subtraction case, must drop an extraneous 1 at the end
-    switch (self.positive << 1 | other.positive) {
+    
+    char sign = static_cast<char>(self.positive << 1 | other.positive);
+    if (self.is_zero()) sign &= OTHER_POSITIVE;
+    if (other.is_zero()) sign &= THIS_POSITIVE;
+    switch (sign) {
         case THIS_POSITIVE:
             other = add_unsigned(~other, calculate_smallest(other.radix_right));
             break;

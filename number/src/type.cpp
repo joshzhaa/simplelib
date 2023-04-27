@@ -54,6 +54,10 @@ std::string Number::to_string() const {
     return str;
 }
     
+Number::operator bool() const {
+    return !is_zero();
+}
+
 Number::operator unsigned() const {
     unsigned result = 0;
     for (unsigned i = 0; i < 8 * sizeof(unsigned); ++i) {

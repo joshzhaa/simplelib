@@ -21,7 +21,7 @@ class Number {
     std::vector<bool> radix_right;
     bool positive; // internally 0 must be positive, but this isn't viewable by the user
     
-    // @@@@ helpers for setting the value of Number - type.cpp
+    // @@@@ helpers for converting between Number and other types - type.cpp
     template<Integer T>
     void unsigned_helper(T num) {
         while (num) {
@@ -30,16 +30,14 @@ class Number {
             num >>= 1;
         }
     }
-
     template<Arithmetic T>
     [[nodiscard]] T negative_helper(T num) {
         if (num >= 0) return num;
         positive = false;
         return num * -1;
     }
-
-    // drop leading and trailing zeroes
-    void simplify();
+    bool is_zero() const { return radix_left.empty() && radix_right.empty(); }
+    void simplify(); // drop leading and trailing zeroes
 
     // @@@@ helpers for math operations - math.cpp
     static Number add_unsigned(const Number& A, const Number& B);
@@ -74,7 +72,8 @@ public:
     void operator=(double num);
 
     // @@@@ convert Number to other data types - type.cpp
-    std::string to_string() const; 
+    std::string to_string() const;
+    operator bool() const;
     operator unsigned() const;
     operator int() const;
 };
